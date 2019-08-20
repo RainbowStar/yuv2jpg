@@ -17,7 +17,7 @@ do
     # echo $line
     # CALL-1.yuv timestamp:1565754707 stage1: stage2:F
     echo $((i++))
-    if [[ $line =~ ^([^ ]+)\ ([^ ]+)\ (stage1[^ ]+)(\ (stage2[^ ]+))*.*$ ]]; then
+    if [[ $line =~ ([^ ]+)\ ([^ ]+)\ (stage1[^ ]+)(\ (stage2[^ ]+))* ]]; then
         yuv_file=${BASH_REMATCH[1]}
         timestamp=${BASH_REMATCH[2]}
         stage1=${BASH_REMATCH[3]}
