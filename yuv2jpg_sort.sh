@@ -15,7 +15,7 @@ if [ ! -e "./$stage2_jpg"  ];then
     \mkdir ./$stage2_jpg
 fi
 
-line_num=$(wc -l < $list_file)
+line_num=$(\wc -l < $list_file)
 
 i=1
 cat $list_file | while read line
