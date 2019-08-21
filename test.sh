@@ -13,3 +13,4 @@ fi
 cp yuv_file/* test
 cd test
 bash ../yuv2jpg_sort.sh
+ls -l *
