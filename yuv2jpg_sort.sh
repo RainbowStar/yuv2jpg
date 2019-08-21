@@ -10,9 +10,13 @@ list_file=CALL.rect
 
 if [ ! -e "./$stage1_jpg"  ];then
     \mkdir ./$stage1_jpg
+else
+    \rm ./$stage1_jpg/*
 fi
 if [ ! -e "./$stage2_jpg"  ];then
     \mkdir ./$stage2_jpg
+else
+    \rm ./$stage2_jpg/*
 fi
 
 line_num=$(\wc -l < $list_file)
@@ -32,10 +36,10 @@ do
         then
             if [[ $stage1 =~ 'stage1:T' && $stage2 =~ 'stage2:F' ]]; then
                 echo "stage1"
-                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./jpg1/${yuv_file%.*}.jpg < /dev/null
+                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./${stage1_jpg}/${yuv_file%.*}.jpg < /dev/null
             elif [[ $stage1 =~ 'stage1:T' && $stage2 =~ 'stage2:T' ]]; then
                 echo "stage1 & stage2"
-                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./jpg2/${yuv_file%.*}.jpg < /dev/null
+                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./${stage2_jpg}/${yuv_file%.*}.jpg < /dev/null
             else
                 echo ""
             fi
