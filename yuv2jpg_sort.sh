@@ -21,7 +21,7 @@ i=1
 cat $list_file | while read line
 do
     # echo $line
-    printf "line %d/%d : \t" $((i++)) $line_num
+    printf "line %d / %d : \t" $((i++)) $line_num
     #      CALL-n.yuv timestamp:nnn... stage1:T... stage2:F...
     if [[ $line =~ ([^ ]+)\ ([^ ]+)\ (stage1[^ ]+)(\ (stage2[^ ]+))* ]]; then
         yuv_file=${BASH_REMATCH[1]}
