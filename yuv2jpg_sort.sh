@@ -3,6 +3,8 @@
 # 使用ffmpeg将.yuv图片转换成.jpg
 # auther:star
 # date:20190820
+# note:
+# ffmpeg cmd must add '< /dev/null'
 
 stage1_jpg=jpg1
 stage2_jpg=jpg2
