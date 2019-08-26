@@ -17,3 +17,7 @@ bash ../yuv2jpg.sh
 ls -l *
 echo
 ls -l */*
+
+find . -name "call*.rect" -exec echo {} \; -exec cat -n {} \; -exec echo \;
+
+echo "finished"
