@@ -22,15 +22,13 @@ list_file=CALL.rect
 stage1_rect=call_stage1_${version}.rect
 stage2_rect=call_stage2_${version}.rect
 filename="$stage1_rect $stage2_rect"
-echo $filename
 
 # storage directory
 stage1=stage1
 stage2=stege2
 stage1_yuv=./${stage1}/yuv
 stage2_yuv=./${stage2}/yuv
-dirname=`echo "$stage1 $stage2 $stage1_yuv $stage2_yuv"`
-echo $dirname
+dirname="$stage1 $stage2 $stage1_yuv $stage2_yuv"
 
 for i in $dirname
 do
@@ -43,7 +41,6 @@ done
 
 for i in $filename
 do
-    echo $i
   if [ -e "./$i" ]; then
       \rm ./$i
   fi
