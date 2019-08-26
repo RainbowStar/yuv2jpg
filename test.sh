@@ -20,4 +20,7 @@ ls -l */*
 
 find . -name "call*.rect" -exec echo {} \; -exec cat -n {} \; -exec echo \;
 
+cd ..
+diff -r test result_1
+
 echo "finished"
