@@ -16,12 +16,13 @@
 # ffmpeg cmd must add '< /dev/null'
 
 version="1.0.0.17"
+list_file=CALL.rect
 
 # file lists
-list_file=CALL.rect
 stage1_rect=call_stage1_${version}.rect
 stage2_rect=call_stage2_${version}.rect
-filename=`echo "$list_file $stage1_rect $stage2_rect"`
+filename="$stage1_rect $stage2_rect"
+echo $filename
 
 # storage directory
 stage1=stage1
@@ -29,20 +30,22 @@ stage2=stege2
 stage1_yuv=./${stage1}/yuv
 stage2_yuv=./${stage2}/yuv
 dirname=`echo "$stage1 $stage2 $stage1_yuv $stage2_yuv"`
+echo $dirname
 
-echo $dirname | while read line
+for i in $dirname
 do
-  if [ ! -e "./$line" ]; then
-      \mkdir -p ./$line
+  if [ ! -e "./$i" ]; then
+      \mkdir -p ./$i
   else
-      \rm ./$line/*
+      \rm -r ./$i/*
   fi
 done
 
-echo $filename | while read line
+for i in $filename
 do
-  if [ -e "./$line" ]; then
-      \rm ./$line
+    echo $i
+  if [ -e "./$i" ]; then
+      \rm ./$i
   fi
 done
 
