@@ -77,9 +77,11 @@ do
                 echo ""
             fi
             \rm -f $yuv_file
+        else
+            echo "$yuv_file not exist"
         fi
     else
-        echo "$yuv_file not exist"
+        echo "line format not match"
     fi
 done
 
