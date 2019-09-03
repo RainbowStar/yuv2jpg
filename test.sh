@@ -13,7 +13,7 @@ fi
 cp yuv_file/* test
 cd test
 # bash ../yuv2jpg_sort.sh
-bash ../yuv2jpg.sh
+bash ../yuv2jpg_drawbox.sh
 ls -l *
 echo
 ls -l */*

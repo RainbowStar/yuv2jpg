@@ -1,7 +1,7 @@
 #!/bin/bash
 #Author:star
 #Time:2019-08-26
-#说   明：yuv2jpg.sh
+#说   明：yuv2jpg_drawbox.sh
 #1.转换YUV为JPG
 #根据call.rect将stage1:T&stage2:F放入stage1，
 #根据call.rect将stage1:T&stage2:T放入stage2
@@ -10,6 +10,7 @@
 #call_stage1_verison.rect：记录stage1:T&stage2:F(先写入文件再转换)
 #call_stage2_version.rect：记录stage1:T&stage2:T(先写入文件再转换)
 #call_stage1_verison.rect&call_stage2_version.rect每个图片记录增加版本信息
+# CALL-16.yuv timestamp:1565754716 stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
 #版   本：V0.1
 #修改记录：(从高到底排序)
 #V0.1
@@ -65,13 +66,26 @@ do
                 echo "stage1"
                 #写入记录新文件call_stage1_version.rect
                 echo $line >> $stage1_rect
-                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
-                \cp $yuv_file ./$stage1_yuv
+                echo $stage1_b
+                # stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
+                # if [[ $stage1_b =~  stage1:T-.+-upperbody\[\((\d+),(\d+)\),\([\d,]+\),\((\d+),(\d+)\),\([\d,]+\)\] ]]; then
+                # if [[ $stage1_b =~  stage1:T-.+-upperbody\[\(([:digit:]+),([:digit:]+)\),\(.+?\),\(([:digit:]+),([:digit:]+)\),\(.+\)\] ]]; then
+                if [[ $stage1_b =~  stage1:T-.+-upperbody\[\(([:digit:]+) ]]; then
+                # if [[ $stage1_b =~  stage1:T-.+-(upperbody) ]]; then
+                    echo ${BASH_REMATCH[1]}
+                    body_llx=${BASH_REMATCH[1]}
+                    body_lly=${BASH_REMATCH[2]}
+                    body_urx=${BASH_REMATCH[3]}
+                    body_ury=${BASH_REMATCH[4]}
+                    # \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=red@0.4 ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
+                    \ffmpeg -y -s 640x360 -i $yuv_file -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=red@0.4 ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
+                    \cp $yuv_file ./$stage1_yuv
+                fi 
             elif [[ $stage1_b =~ 'stage1:T' && $stage2_b =~ 'stage2:T' ]]; then
                 echo "stage1 & stage2"
                 #写入记录新文件call_stage2_version.rect
                 echo $line >> $stage2_rect
-                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file ./${stage2}/${yuv_file%.*}_${version}.jpg < /dev/null
+                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file -vf drawbox=x=10:y=20:w=200:h=60:t=2:color=red@0.4 ./${stage2}/${yuv_file%.*}_${version}.jpg < /dev/null
                 \cp $yuv_file ./$stage2_yuv
             else
                 echo ""
