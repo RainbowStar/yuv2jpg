@@ -20,6 +20,8 @@ version="1.0.0.17"
 list_file=CALL.rect
 res=640x360
 
+loglevel=quiet # quiet or info
+
 # file lists
 stage1_rect=call_stage1_${version}.rect
 stage2_rect=call_stage2_${version}.rect
@@ -67,7 +69,6 @@ do
                 echo "stage1"
                 #写入记录新文件call_stage1_version.rect
                 echo $line >> $stage1_rect
-                echo $stage1_b
                 # stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
                 if [[ $stage1_b =~ stage1:T-.+-upperbody\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\]-gesture\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\] ]]; then
                     # echo ${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]} ${BASH_REMATCH[4]} 
@@ -79,8 +80,8 @@ do
                     gest_lly=${BASH_REMATCH[6]}
                     gest_urx=${BASH_REMATCH[7]}
                     gest_ury=${BASH_REMATCH[8]}
-                    \ffmpeg -loglevel quiet -y -s $res -i $yuv_file \
-                        -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=ih-h-$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
+                    \ffmpeg -loglevel $loglevel -y -s $res -i $yuv_file \
+                        -vf drawbox=x=$body_llx:y=$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
                         ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
                 fi 
                 \cp $yuv_file ./$stage1_yuv
@@ -98,8 +99,8 @@ do
                     gest_lly=${BASH_REMATCH[6]}
                     gest_urx=${BASH_REMATCH[7]}
                     gest_ury=${BASH_REMATCH[8]}
-                    \ffmpeg -loglevel quiet -y -s $res -i $yuv_file \
-                        -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=ih-h-$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
+                    \ffmpeg -loglevel $loglevel -y -s $res -i $yuv_file \
+                        -vf drawbox=x=$body_llx:y=$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
                         ./${stage2}/${yuv_file%.*}_${version}.jpg < /dev/null
                 fi
                 \cp $yuv_file ./$stage2_yuv
