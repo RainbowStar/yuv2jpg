@@ -18,6 +18,7 @@
 
 version="1.0.0.17"
 list_file=CALL.rect
+res=640x360
 
 # file lists
 stage1_rect=call_stage1_${version}.rect
@@ -68,24 +69,39 @@ do
                 echo $line >> $stage1_rect
                 echo $stage1_b
                 # stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
-                # if [[ $stage1_b =~  stage1:T-.+-upperbody\[\((\d+),(\d+)\),\([\d,]+\),\((\d+),(\d+)\),\([\d,]+\)\] ]]; then
-                # if [[ $stage1_b =~  stage1:T-.+-upperbody\[\(([:digit:]+),([:digit:]+)\),\(.+?\),\(([:digit:]+),([:digit:]+)\),\(.+\)\] ]]; then
-                if [[ $stage1_b =~  stage1:T-.+-upperbody\[\(([:digit:]+) ]]; then
-                # if [[ $stage1_b =~  stage1:T-.+-(upperbody) ]]; then
-                    echo ${BASH_REMATCH[1]}
+                if [[ $stage1_b =~ stage1:T-.+-upperbody\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\]-gesture\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\] ]]; then
+                    # echo ${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]} ${BASH_REMATCH[4]} 
                     body_llx=${BASH_REMATCH[1]}
                     body_lly=${BASH_REMATCH[2]}
                     body_urx=${BASH_REMATCH[3]}
                     body_ury=${BASH_REMATCH[4]}
-                    # \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=red@0.4 ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
-                    \ffmpeg -y -s 640x360 -i $yuv_file -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=red@0.4 ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
-                    \cp $yuv_file ./$stage1_yuv
+                    gest_llx=${BASH_REMATCH[5]}
+                    gest_lly=${BASH_REMATCH[6]}
+                    gest_urx=${BASH_REMATCH[7]}
+                    gest_ury=${BASH_REMATCH[8]}
+                    \ffmpeg -loglevel quiet -y -s $res -i $yuv_file \
+                        -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=ih-h-$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
+                        ./${stage1}/${yuv_file%.*}_${version}.jpg < /dev/null
                 fi 
+                \cp $yuv_file ./$stage1_yuv
             elif [[ $stage1_b =~ 'stage1:T' && $stage2_b =~ 'stage2:T' ]]; then
                 echo "stage1 & stage2"
                 #写入记录新文件call_stage2_version.rect
                 echo $line >> $stage2_rect
-                \ffmpeg -loglevel quiet -y -s 640x360 -i $yuv_file -vf drawbox=x=10:y=20:w=200:h=60:t=2:color=red@0.4 ./${stage2}/${yuv_file%.*}_${version}.jpg < /dev/null
+                if [[ $stage1_b =~ stage1:T-.+-upperbody\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\]-gesture\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\] ]]; then
+                    # echo ${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]} ${BASH_REMATCH[4]} 
+                    body_llx=${BASH_REMATCH[1]}
+                    body_lly=${BASH_REMATCH[2]}
+                    body_urx=${BASH_REMATCH[3]}
+                    body_ury=${BASH_REMATCH[4]}
+                    gest_llx=${BASH_REMATCH[5]}
+                    gest_lly=${BASH_REMATCH[6]}
+                    gest_urx=${BASH_REMATCH[7]}
+                    gest_ury=${BASH_REMATCH[8]}
+                    \ffmpeg -loglevel quiet -y -s $res -i $yuv_file \
+                        -vf drawbox=x=$body_llx:y=ih-h-$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=ih-h-$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
+                        ./${stage2}/${yuv_file%.*}_${version}.jpg < /dev/null
+                fi
                 \cp $yuv_file ./$stage2_yuv
             else
                 echo ""
