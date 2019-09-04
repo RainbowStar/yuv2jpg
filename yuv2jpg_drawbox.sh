@@ -86,8 +86,8 @@ do
                 body_llx=${BASH_REMATCH[1]}; body_lly=${BASH_REMATCH[2]}; body_urx=${BASH_REMATCH[3]}; body_ury=${BASH_REMATCH[4]};
                 gest_llx=${BASH_REMATCH[5]}; gest_lly=${BASH_REMATCH[6]}; gest_urx=${BASH_REMATCH[7]}; gest_ury=${BASH_REMATCH[8]};
                 \ffmpeg -loglevel $loglevel -y -s $res -i $yuv_file \
-                    -vf drawbox=x=$body_llx:y=$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
-                    ./${jpg_dir}/${yuv_file%.*}_${version}.jpg < /dev/null
+                        -vf drawbox=x=$body_llx:y=$body_lly:w=$body_urx-$body_llx:h=$body_ury-$body_lly:t=2:color=green@0.8,drawbox=x=$gest_llx:y=$gest_lly:w=$gest_urx-$gest_llx:h=$gest_ury-$gest_lly:t=2:color=red@0.8 \
+                        ./${jpg_dir}/${yuv_file%.*}_${version}.jpg < /dev/null
             fi
             \rm -f $yuv_file
         else
