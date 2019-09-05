@@ -81,8 +81,10 @@ do
                 echo ""
             fi
 
-            # stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
-            if [[ $stage1_b =~ stage1:T-.+-upperbody\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\]-gesture\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\] ]]; then
+            # stage1:T-0.404722-upperbody[(188,70),(422,70),(422,332),(188,332)]-gesture[(326,184),(388,184),(388,240),(326,240)] stage2:T-1.34...
+            # stage2:T-1.349073-gestureex[(294,152),(418,152),(418,268),(294,268)]-gesture[(324,188),(386,188),(386,244),(324,244)]
+            if [[ $stage1_b =~ stage1:T-.+-upperbody\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\]-gesture\[\(([0-9]+),([0-9]+)\),\(.+?\),\(([0-9]+),([0-9]+)\),\(.+?\)\] ]];
+            then
                 # echo ${BASH_REMATCH[1]} ${BASH_REMATCH[2]} ${BASH_REMATCH[3]} ${BASH_REMATCH[4]} 
                 body_llx=${BASH_REMATCH[1]}; body_lly=${BASH_REMATCH[2]}; body_urx=${BASH_REMATCH[3]}; body_ury=${BASH_REMATCH[4]};
                 gest_llx=${BASH_REMATCH[5]}; gest_lly=${BASH_REMATCH[6]}; gest_urx=${BASH_REMATCH[7]}; gest_ury=${BASH_REMATCH[8]};
