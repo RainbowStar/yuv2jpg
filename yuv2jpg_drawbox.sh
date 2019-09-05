@@ -15,6 +15,13 @@
 #修改记录：(从高到底排序)
 # ffmpeg cmd must add '< /dev/null'
 
+RED='\E[1;31m'
+GREEN='\E[1;32m'
+YELLOW='\E[1;33m'
+BLUE='\E[1;34m'
+PURPLE='\E[1;35m'
+NC='\E[0m'
+
 version="1.0.0.17"
 list_file=CALL.rect
 res=640x360
@@ -49,9 +56,25 @@ do
   fi
 done
 
+cecho() {
+  local code="\033["
+  case "$1" in
+    black  | bk) color="${code}0;30m";;
+    red    |  r) color="${code}1;31m";;
+    green  |  g) color="${code}1;32m";;
+    yellow |  y) color="${code}1;33m";;
+    blue   |  b) color="${code}1;34m";;
+    purple |  p) color="${code}1;35m";;
+    cyan   |  c) color="${code}1;36m";;
+    gray   | gr) color="${code}0;37m";;
+    *) local text="$1"
+  esac
+  [ -z "$text" ] && local text="$color$2${code}0m"
+  echo -e "$text"
+}
 
 #### start prcessing ####
-echo "======================="
+cecho g "======================="
 
 line_num=$(\wc -l < $list_file)
 i=1
@@ -66,13 +89,13 @@ do
         if [ -f "$yuv_file" ] #file
         then
             if [[ $stage1_b =~ 'stage1:T' && $stage2_b =~ 'stage2:F' ]]; then
-                echo "stage1"
+                cecho y "stage1"
                 #写入记录新文件call_stage1_version.rect
                 echo $line >> $stage1_rect
                 \cp $yuv_file ./$stage1_yuv
                 jpg_dir=$stage1
             elif [[ $stage1_b =~ 'stage1:T' && $stage2_b =~ 'stage2:T' ]]; then
-                echo "stage1 & stage2"
+                cecho b "stage1 & stage2"
                 #写入记录新文件call_stage2_version.rect
                 echo $line >> $stage2_rect
                 \cp $yuv_file ./$stage2_yuv
@@ -97,13 +120,13 @@ do
             fi
             \rm -f $yuv_file
         else
-            echo "$yuv_file not exist"
+            cecho r "$yuv_file not exist"
         fi
     else
-        echo "line format not match"
+        cecho r "line format not match"
     fi
 done
 
-echo "======================="
-echo "$0 finished!"
+cecho g "======================="
+cecho g "$0 finished!\n"
 
